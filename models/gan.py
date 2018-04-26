@@ -119,5 +119,5 @@ class Gan(object):
             l (tf.Scalar): average batch loss for the discriminator.
 
         """
-        l = -tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=y_hat, labels=tf.zeros_like(y_hat)))
+        l = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=y_hat, labels=tf.ones_like(y_hat)))
         return l

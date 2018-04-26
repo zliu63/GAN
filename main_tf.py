@@ -24,7 +24,7 @@ def train(model, mnist_dataset, learning_rate=0.0005, batch_size=16,
     """
     for step in range(0, num_steps):
         batch_x, _ = mnist_dataset.train.next_batch(batch_size)
-        batch_z = np.random.uniform(-1,1,[batch_size,2])  #<--!!!!
+        batch_z = np.random.uniform(-1,1,[batch_size,10])  #<--!!!!
         # Train generator and discriminator
         for i in range(20):
             dLoss,_ = model.session.run([model.d_loss,model.Discriminator_Optimizer],feed_dict={model.z_placeholder:batch_z,model.x_placeholder:batch_x})
@@ -42,7 +42,7 @@ def main(_):
     mnist_dataset = input_data.read_data_sets('MNIST_data', one_hot=True)
 
     # Build model.
-    model = Gan(nlatent = 2)
+    model = Gan(nlatent = 10)
 
     # Start training
     train(model, mnist_dataset)
