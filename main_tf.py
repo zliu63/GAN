@@ -9,7 +9,7 @@ from models.gan import Gan
 
 
 def train(model, mnist_dataset, learning_rate=0.0005, batch_size=16,
-          num_steps=5000):
+          num_steps=1000):
     """Implements the training loop of stochastic gradient descent.
 
     Performs stochastic gradient descent with the indicated batch_size and
@@ -24,9 +24,14 @@ def train(model, mnist_dataset, learning_rate=0.0005, batch_size=16,
     """
     for step in range(0, num_steps):
         batch_x, _ = mnist_dataset.train.next_batch(batch_size)
-        batch_z = np.random.uniform(-1,1,[batch_size,2])
+        batch_z = np.random.uniform(-1,1,[batch_size,2])  #<--!!!!
         # Train generator and discriminator
-
+        for i in range(20):
+            dLoss,_ = model.session.run([model.d_loss,model.Discriminator_Optimizer],feed_dict={model.z_placeholder:batch_z,model.x_placeholder:batch_x})
+        gLoss,_ = model.session.run([model.g_loss,model.Generator_Optimizer],feed_dict={model.z_placeholder:batch_z})
+        print(step)
+        print("dLoss ",dLoss)
+        print("gLoss ",gLoss)
 
 def main(_):
     """High level pipeline.
@@ -37,11 +42,11 @@ def main(_):
     mnist_dataset = input_data.read_data_sets('MNIST_data', one_hot=True)
 
     # Build model.
-    model = Gan()
+    model = Gan(nlatent = 2)
 
     # Start training
     train(model, mnist_dataset)
-
+    
 
 if __name__ == "__main__":
     tf.app.run()
